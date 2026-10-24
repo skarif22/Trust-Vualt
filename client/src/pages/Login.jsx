@@ -35,9 +35,9 @@ export default function Login() {
     <div className="gate">
       <section className="gate-copy">
         <p className="eyebrow">Secure document sharing</p>
-        <h1>Every handoff is hashed. Every denial is remembered.</h1>
+        <h1>SilicaVault</h1>
         <p>
-          TrustVault keeps files behind per-document grants and writes a SHA-256 chained
+          SilicaVault keeps files behind per-document grants and writes a SHA-256 chained
           audit trail no role can silently rewrite.
         </p>
       </section>

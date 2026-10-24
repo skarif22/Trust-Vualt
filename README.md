@@ -1,4 +1,4 @@
-# TrustVault
+# SilicaVault
 
 Secure document sharing with a **tamper-evident, hash-chained audit trail**. Owners grant and revoke access per file. Administrators watch the ledger — they do not get a silent master key to file bytes.
 

@@ -23,7 +23,7 @@ if (process.env.SEED_ON_START !== "false") {
 
 const app = createApp();
 const server = app.listen(port, () => {
-  console.log(`TrustVault listening on :${port} (${db.kind})`);
+  console.log(`SilicaVault listening on :${port} (${db.kind})`);
 });
 
 async function shutdown() {

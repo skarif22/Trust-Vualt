@@ -1,4 +1,4 @@
-# Prompts used to build TrustVault
+# Prompts used to build SilicaVault
 
 This file records the product brief and the follow-through prompts a builder (human or agent) should reuse. It is the audit trail of **how the system was specified**, not of runtime events.
 

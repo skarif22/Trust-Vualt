@@ -1,4 +1,4 @@
-# TrustVault threat model
+# SilicaVault threat model
 
 This document is a working threat model for the shipped demo, not a certification. The goal is to show how isolation and the hash-chained ledger shrink the blast radius of common failures.
 

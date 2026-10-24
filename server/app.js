@@ -29,7 +29,7 @@ export function createApp() {
   app.use(express.json({ limit: "2mb" }));
 
   app.get("/api/health", (_req, res) => {
-    res.json({ ok: true, name: "TrustVault" });
+    res.json({ ok: true, name: "SilicaVault" });
   });
   app.use("/api/auth", authRoutes);
   app.use("/api/documents", documentRoutes);

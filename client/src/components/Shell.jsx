@@ -13,7 +13,7 @@ export default function Shell() {
             ⌬
           </span>
           <div>
-            <strong>TrustVault</strong>
+            <strong>SilicaVault</strong>
             <em>Hash-chained custody</em>
           </div>
         </div>

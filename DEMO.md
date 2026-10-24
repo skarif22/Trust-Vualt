@@ -1,4 +1,4 @@
-# TrustVault demo video script (~3 minutes)
+# SilicaVault demo video script (~3 minutes)
 
 Record at 1920×1080. Speak at a calm, precise pace. Show the URL and test accounts on a title card for 5 seconds.
 
@@ -6,7 +6,7 @@ Record at 1920×1080. Speak at a calm, precise pace. Show the URL and test accou
 
 **[0:00–0:15] Title**
 
-> “TrustVault is secure document sharing with a hash-chained audit trail. Three roles: administrator, document owner, and viewer. Isolation is enforced on every download — and proven with tests.”
+> “SilicaVault is secure document sharing with a hash-chained audit trail. Three roles: administrator, document owner, and viewer. Isolation is enforced on every download — and proven with tests.”
 
 Show the GitHub README credentials.
 
@@ -60,6 +60,6 @@ Optionally show a terminal: `npm test`.
 
 **[2:35–3:00] Close**
 
-> “TrustVault: JWT auth, per-document read and edit grants, instant revoke, and a tamper-evident trail. Test accounts are in the README. Isolation is not a slide — it is a failing status code and a test.”
+> “SilicaVault: JWT auth, per-document read and edit grants, instant revoke, and a tamper-evident trail. Test accounts are in the README. Isolation is not a slide — it is a failing status code and a test.”
 
 Fade to repo URL + live URL.

@@ -52,7 +52,7 @@ export async function seedIfEmpty() {
     actorEmail: "admin@trustvault.dev",
     action: "system.seed",
     success: true,
-    metadata: { message: "TrustVault demo dataset created" },
+    metadata: { message: "SilicaVault demo dataset created" },
   });
 
   const contracts = newId();
@@ -69,7 +69,7 @@ export async function seedIfEmpty() {
   const nda = newId();
   const ndaFile = textFile(
     "nda-acme.txt",
-    "TRUSTVAULT NDA — ACME PARTNERSHIP\nConfidential. Not for redistribution.\nHash-chained copies are authoritative."
+    "SILICAVAULT NDA — ACME PARTNERSHIP\nConfidential. Not for redistribution.\nHash-chained copies are authoritative."
   );
   await query(
     `INSERT INTO documents (id, owner_id, folder_id, title, description, filename, mime_type, size_bytes, content)
