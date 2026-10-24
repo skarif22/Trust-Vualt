@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth.jsx";
+import AuthFrame from "../components/AuthFrame.jsx";
 
 const DEMOS = [
   { email: "admin@trustvault.dev", password: "Admin123!", label: "Administrator" },
@@ -12,8 +13,8 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [email, setEmail] = useState("owner@trustvault.dev");
-  const [password, setPassword] = useState("Owner123!");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -32,37 +33,35 @@ export default function Login() {
   }
 
   return (
-    <div className="gate">
-      <section className="gate-copy">
-        <p className="eyebrow">Secure document sharing</p>
-        <h1>SilicaVault</h1>
-        <p>
-          SilicaVault keeps files behind per-document grants and writes a SHA-256 chained
-          audit trail no role can silently rewrite.
-        </p>
-      </section>
-      <form className="panel auth-panel" onSubmit={submit}>
-        <h2>Open the vault</h2>
+    <AuthFrame>
+      <form className="auth-form" onSubmit={submit}>
+        <p className="auth-form-kicker">WELCOME BACK</p>
+        <h3>Open your vault</h3>
+        <p className="auth-form-subtitle">Sign in to continue to your secure workspace.</p>
         {error && <p className="banner error">{error}</p>}
         <label>
-          Email
-          <input value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username" />
+          EMAIL ADDRESS
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username" placeholder="you@company.com" required />
         </label>
         <label>
-          Password
+          PASSWORD
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="current-password"
+            placeholder="Enter your password"
+            required
           />
         </label>
         <button className="primary" disabled={busy}>
-          {busy ? "Checking…" : "Sign in"}
+          {busy ? "SECURELY SIGNING IN…" : "SIGN IN TO SILICAVAULT  →"}
         </button>
         <p className="fine">
-          New here? <Link to="/register">Create a viewer or owner account</Link>
+          New to SilicaVault? <Link to="/register">Create an account</Link>
         </p>
+        <div className="demo-heading"><span>DEMO ACCESS</span><i /></div>
+        <p className="demo-hint">Choose a role to fill in its demo credentials.</p>
         <div className="demo-row">
           {DEMOS.map((d) => (
             <button
@@ -78,6 +77,7 @@ export default function Login() {
           ))}
         </div>
       </form>
-    </div>
+    </AuthFrame>
   );
 }
+

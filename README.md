@@ -26,10 +26,10 @@ Seeded files:
 
 ## Live demo
 
-- **App URL:** _set after Render/Heroku deploy_
-- **Source:** _set after the GitHub repository is published_
+- **App URL:** [https://silicavault.onrender.com](https://silicavault.onrender.com)
+- **Source:** [https://github.com/skarif22/Trust-Vualt](https://github.com/skarif22/Trust-Vualt)
 
-Until those are live, run locally (below). The Docker image and `render.yaml` are ready for a single web service plus PostgreSQL.
+The app is deployed on Render with PostgreSQL. The optional `netlify.toml` publishes the React client on Netlify and proxies `/api/*` requests to the Render backend.
 
 ## Architecture
 
@@ -161,3 +161,4 @@ The first `prev_hash` is 64 zero hex characters.
 ## License
 
 MIT
+

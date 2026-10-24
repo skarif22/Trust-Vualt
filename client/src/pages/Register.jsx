@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth.jsx";
+import AuthFrame from "../components/AuthFrame.jsx";
 
 export default function Register() {
   const { register } = useAuth();
@@ -33,21 +34,18 @@ export default function Register() {
   }
 
   return (
-    <div className="gate">
-      <section className="gate-copy">
-        <p className="eyebrow">Enrollment</p>
-        <h1>Take a role. Keep a trail.</h1>
-        <p>Administrators cannot self-register. Demo admins are seeded.</p>
-      </section>
-      <form className="panel auth-panel" onSubmit={submit}>
-        <h2>Create account</h2>
+    <AuthFrame>
+      <form className="auth-form" onSubmit={submit}>
+        <p className="auth-form-kicker">JOIN SILICAVAULT</p>
+        <h3>Create your account</h3>
+        <p className="auth-form-subtitle">Set up secure access to your document workspace.</p>
         {error && <p className="banner error">{error}</p>}
         <label>
-          Name
+          FULL NAME
           <input value={form.name} onChange={(e) => patch("name", e.target.value)} required />
         </label>
         <label>
-          Email
+          EMAIL ADDRESS
           <input
             type="email"
             value={form.email}
@@ -56,7 +54,7 @@ export default function Register() {
           />
         </label>
         <label>
-          Password
+          PASSWORD
           <input
             type="password"
             minLength={8}
@@ -66,19 +64,20 @@ export default function Register() {
           />
         </label>
         <label>
-          Role
+          ACCOUNT TYPE
           <select value={form.role} onChange={(e) => patch("role", e.target.value)}>
             <option value="viewer">Viewer</option>
             <option value="owner">Document owner</option>
           </select>
         </label>
         <button className="primary" disabled={busy}>
-          {busy ? "Creating…" : "Register"}
+          {busy ? "CREATING ACCOUNT…" : "CREATE SECURE ACCOUNT  →"}
         </button>
         <p className="fine">
-          Already enrolled? <Link to="/login">Sign in</Link>
+          Already have an account? <Link to="/login">Sign in</Link>
         </p>
       </form>
-    </div>
+    </AuthFrame>
   );
 }
+
