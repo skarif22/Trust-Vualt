@@ -26,7 +26,8 @@ Seeded files:
 
 ## Live demo
 
-- **App URL:** [https://silicavault.onrender.com](https://silicavault.onrender.com)
+- **App URL (Netlify):** [https://silicavault.netlify.app](https://silicavault.netlify.app)
+- **Backend and API (Render):** [https://silicavault.onrender.com](https://silicavault.onrender.com)
 - **Source:** [https://github.com/skarif22/Trust-Vualt](https://github.com/skarif22/Trust-Vualt)
 
 The app is deployed on Render with PostgreSQL. The optional `netlify.toml` publishes the React client on Netlify and proxies `/api/*` requests to the Render backend.
