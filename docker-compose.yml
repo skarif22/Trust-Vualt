@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: trustvault
+      POSTGRES_PASSWORD: trustvault
+      POSTGRES_DB: trustvault
+    ports:
+      - "5432:5432"
+    volumes:
+      - trustvault_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trustvault"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      NODE_ENV: production
+      DATABASE_URL: postgres://trustvault:trustvault@db:5432/trustvault
+      JWT_SECRET: change-me-in-real-deployments
+      SEED_ON_START: "true"
+      PGSSL: "false"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  trustvault_pg:
