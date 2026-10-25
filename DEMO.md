@@ -1,65 +1,52 @@
-# SilicaVault demo video script (~3 minutes)
+# SilicaVault five-minute demo video script
 
-Record at 1920×1080. Speak at a calm, precise pace. Show the URL and test accounts on a title card for 5 seconds.
+**Recording status:** This script is ready; an actual video recording has not been created yet. Record the live app and a terminal at a readable resolution. Use the public demo accounts listed in `README.md` and avoid displaying real or personal files.
 
----
+## 0:00–0:25 — What the app does
 
-**[0:00–0:15] Title**
+**Show:** Title card, then `https://silicavault.netlify.app`.
 
-> “SilicaVault is secure document sharing with a hash-chained audit trail. Three roles: administrator, document owner, and viewer. Isolation is enforced on every download — and proven with tests.”
+**Say:** “SilicaVault is a document-sharing demo built around per-document permissions and a hash-chained activity ledger. It has administrator, document-owner, and viewer roles. In this walkthrough I’ll show what each role can see, how a read grant works, and what the audit trail can and cannot prove.”
 
-Show the GitHub README credentials.
+## 0:25–1:05 — Owner library and document permissions
 
-**[0:15–0:40] Owner login and library**
+**Show:** Sign in with the Document owner demo button. Open the library and the seeded **ACME mutual NDA**.
 
-Log in as `owner@trustvault.dev` / `Owner123!`.
+**Say:** “Jordan owns these documents. A grant belongs to one document and one named account; folders are for organization and do not grant inherited access. The NDA has a read-only grant for Priya. The lab notes have edit access. The restricted Q3 budget has no viewer grant.”
 
-> “Jordan Hale is a document owner. The library is organized into folders. Search filters by title and file name. The Q3 budget is restricted — nobody else has a grant.”
+Point out the owner controls, grant rows, and document details. Do not change or revoke seeded grants during this recording.
 
-Open **Q3 budget (restricted)**. Point at empty grants.
+## 1:05–1:45 — Viewer access
 
-**[0:40–1:10] Grant and viewer isolation**
+**Show:** Sign out, choose the Viewer demo button, then open the library and the NDA.
 
-Open **ACME mutual NDA**. Show Priya’s read grant.
+**Say:** “Priya sees the NDA and the lab notes because she has grants for those specific documents. The restricted budget is not in her library. Opening a document and downloading its bytes use separate server routes; the download route checks the current owner or grant before returning content.”
 
-> “Priya the viewer may read the NDA. She must never see the budget.”
+Point out the NDA’s description and the available Download control. Do not claim that opening the detail page creates a successful-view audit event; that event is not currently implemented.
 
-Sign out. Log in as `viewer@trustvault.dev` / `Viewer123!`.
+## 1:45–2:30 — Read and edit boundaries, plus revoke behavior
 
-Show the library: NDA and lab notes appear; **budget does not**.
+**Show:** Open the NDA and point out that it is read-only. Then show the isolation test names in `tests/isolation.test.js` or a pre-run test result.
 
-Click into the NDA, download it. Attempt to edit — denied if you open the network panel, or skip to lab notes which have edit.
+**Say:** “A read grant permits viewing and downloading, but does not permit edits. An edit grant also allows reading. Revoke removes the grant row, and the next request checks the database again. The automated test downloads before revoke and verifies that the next download is denied afterward. I’m showing that behavior through the test suite so this recording does not alter the shared production demo grants.”
 
-**[1:10–1:35] Instant revoke**
+## 2:30–3:15 — Administrator oversight
 
-Switch back to the owner. On the NDA, click **Revoke**.
+**Show:** Sign out, use the Administrator demo button, and open **Admin ledger**. Then open the restricted budget’s metadata page and point to **Download blocked**.
 
-Switch to the viewer, refresh, try download.
+**Say:** “The administrator can review global activity and document metadata, including this restricted budget’s record. Admin role alone does not grant access to file bytes. The API has a separate download check, so the metadata view is not a download permission.”
 
-> “Revoke is a row delete, not a cache flag. The next request is 403 and lands on the ledger as a failed attempt.”
+## 3:15–4:00 — Audit events and tests
 
-**[1:35–2:10] Admin dashboard — not a master key**
+**Show:** Return to the ledger. Point out upload, permission-grant, sign-in, and failed-event rows. Then show `npm test` with the passing test summary.
 
-Log in as `admin@trustvault.dev` / `Admin123!`.
+**Say:** “Each audit entry stores the previous hash and a SHA-256 hash of the event fields. The tests include denied downloads, administrator byte isolation, read-versus-edit behavior, immediate revoke, failed login recording, and hash-tamper detection. The suite passed all ten tests in the checked workspace.”
 
-Open **Admin ledger**. Point at **Chain intact**, failed events, hash prefixes.
+## 4:00–5:00 — Design choices, limits, and close
 
-Open the restricted budget from the library.
+**Show:** Briefly show the permission table in `README.md`, then finish on the live URL and repository.
 
-> “Admins can inspect metadata. Download stays blocked. Oversight without silent super-user access.”
+**Say:** “The permission model is intentionally per document: owner access is implicit, and named grants provide read or edit. There are no folder-inherited grants or public links. File bytes are stored in PostgreSQL, and the audit chain is tamper-evident: changing a row breaks verification. The demo does not use WORM storage or an external hash anchor, so a database operator with write access could rewrite the ledger. A successful document-detail view is not currently logged; search lacks owner and date filters; uploads are size-limited but do not validate file signatures or scan for malware. Those are unfinished items, documented in the threat and prompt records. The demo shows the current implementation and its limits.”
 
-Click **Download blocked** / show the banner “Admin metadata view”.
+Fade out with the app URL, repository URL, and “Demo credentials are in README.md.”
 
-**[2:10–2:35] Chain verification**
-
-Stay on the ledger. Filter **Denied / failed**.
-
-> “Every event hashes the previous tip. If someone tampers with a stored hash, verification fails. Our automated suite flips a hash on purpose and expects the chain to report broken.”
-
-Optionally show a terminal: `npm test`.
-
-**[2:35–3:00] Close**
-
-> “SilicaVault: JWT auth, per-document read and edit grants, instant revoke, and a tamper-evident trail. Test accounts are in the README. Isolation is not a slide — it is a failing status code and a test.”
-
-Fade to repo URL + live URL.
