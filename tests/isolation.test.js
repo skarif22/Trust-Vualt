@@ -60,6 +60,24 @@ test("viewer is denied download of an unshared document and the failure is audit
   assert.equal(logs.rows[0].actor_email, "viewer@trustvault.dev");
 });
 
+test("viewer cannot read an unshared document by requesting its ID directly", async () => {
+  const token = await login("viewer@trustvault.dev", "Viewer123!");
+  const res = await fetch(`${url}/api/documents/${seed.ids.budget}`, {
+    headers: auth(token),
+  });
+  assert.equal(res.status, 403);
+  assert.deepEqual(await res.json(), { error: "You do not have access to this document" });
+
+  const denied = await query(
+    `SELECT actor_email FROM audit_logs
+     WHERE action = 'document.view' AND success = FALSE AND resource_id = $1
+     ORDER BY id DESC LIMIT 1`,
+    [seed.ids.budget]
+  );
+  assert.equal(denied.rowCount, 1);
+  assert.equal(denied.rows[0].actor_email, "viewer@trustvault.dev");
+});
+
 test("admin cannot download owner-only files (metadata isolation)", async () => {
   const token = await login("admin@trustvault.dev", "Admin123!");
   const meta = await fetch(`${url}/api/documents/${seed.ids.budget}`, {
@@ -95,6 +113,30 @@ test("read grant cannot edit; edit grant can update title", async () => {
   assert.equal(body.document.title, "Lab notes (viewer edit)");
 });
 
+test("viewer cannot delete another owner's document, even with an edit grant", async () => {
+  const token = await login("viewer@trustvault.dev", "Viewer123!");
+
+  for (const documentId of [seed.ids.budget, seed.ids.notes]) {
+    const res = await fetch(`${url}/api/documents/${documentId}`, {
+      method: "DELETE",
+      headers: auth(token),
+    });
+    assert.equal(res.status, 403);
+
+    const remaining = await query("SELECT id FROM documents WHERE id = $1", [documentId]);
+    assert.equal(remaining.rowCount, 1);
+
+    const denied = await query(
+      `SELECT actor_email FROM audit_logs
+       WHERE action = 'document.delete' AND success = FALSE AND resource_id = $1
+       ORDER BY id DESC LIMIT 1`,
+      [documentId]
+    );
+    assert.equal(denied.rowCount, 1);
+    assert.equal(denied.rows[0].actor_email, "viewer@trustvault.dev");
+  }
+});
+
 test("owner revoke is immediate — subsequent download fails", async () => {
   const owner = await login("owner@trustvault.dev", "Owner123!");
   const viewer = await login("viewer@trustvault.dev", "Viewer123!");
@@ -114,6 +156,11 @@ test("owner revoke is immediate — subsequent download fails", async () => {
     headers: auth(viewer),
   });
   assert.equal(after.status, 403);
+
+  const detailAfter = await fetch(`${url}/api/documents/${seed.ids.nda}`, {
+    headers: auth(viewer),
+  });
+  assert.equal(detailAfter.status, 403);
 });
 
 test("viewer cannot grant permissions on someone else's document", async () => {
@@ -125,3 +172,4 @@ test("viewer cannot grant permissions on someone else's document", async () => {
   });
   assert.equal(res.status, 403);
 });
+
