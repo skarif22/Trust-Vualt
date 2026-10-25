@@ -120,17 +120,51 @@ Environment:
 | `SEED_ON_START` | `true` to load demo accounts if the DB is empty |
 | `MAX_UPLOAD_BYTES` | Default 8388608 (8 MiB) |
 
-## API sketch
+## API and access permissions
 
-- `POST /api/auth/register` `{ name, email, password, role: "viewer"|"owner" }`
-- `POST /api/auth/login`
-- `GET /api/documents?q=&folderId=`
-- `POST /api/documents` multipart `file`, `title`, `description`, `folderId`
-- `GET|PUT|DELETE /api/documents/:id`
-- `GET /api/documents/:id/download`
-- `POST /api/documents/:id/permissions` `{ email, canRead, canEdit }`
-- `DELETE /api/documents/:id/permissions/:userId`
-- `GET /api/admin/audit` · `GET /api/admin/audit/verify`
+Unless an endpoint is marked **Public**, send the JWT as `Authorization: Bearer <token>`. The API reloads the account and checks the document owner/grant on each request. An administrator can inspect document metadata, but has no implicit permission to read file bytes.
+
+### Authentication
+
+| Method and endpoint | Who may call it | Behavior |
+| --- | --- | --- |
+| `GET /api/health` | Public | Health check; returns service status only. |
+| `POST /api/auth/register` | Public | Creates a viewer by default or an owner when `role` is `owner`. Registration cannot create an administrator. |
+| `POST /api/auth/login` | Public | Authenticates an account; rate-limited. Failed credentials are audited. |
+| `GET /api/auth/me` | Any signed-in user | Returns the caller's own account details. |
+| `GET /api/auth/users` | Owner or administrator | Lists account names, emails, roles, and creation dates for the grant picker. |
+
+### Documents and folders
+
+| Method and endpoint | Who may call it | Behavior |
+| --- | --- | --- |
+| `GET /api/documents?q=&folderId=` | Any signed-in user | Owners see their documents; viewers see only documents with a read or edit grant; administrators see document metadata. Search and folder filtering do not bypass those visibility rules. |
+| `GET /api/documents/folders` | Any signed-in user | Lists folders owned by the caller. |
+| `POST /api/documents/folders` | Owner or administrator | Creates a folder owned by the caller. Body: `{ "name": "..." }`. |
+| `POST /api/documents` | Owner or administrator | Uploads one file (maximum 8 MiB by default). Multipart fields: `file`, `title`, `description`, optional `folderId`. A supplied folder must belong to the caller. |
+| `GET /api/documents/:id` | Document owner, user with read/edit grant, or administrator | Returns metadata. An administrator without a grant receives metadata only; an ungranted viewer is denied. |
+| `PUT /api/documents/:id` | Document owner or user with edit grant | Updates document details and may replace the file. Read-only grants and administrators without ownership/edit grant are denied. |
+| `DELETE /api/documents/:id` | Document owner only | Deletes the document. Edit grants do not include delete permission. |
+| `GET /api/documents/:id/download` | Document owner or user with read/edit grant | Returns file bytes. Administrators need an explicit grant or ownership; metadata access alone is insufficient. |
+| `GET /api/documents/:id/audit` | Document owner or administrator | Reads the document's audit events. A viewer grant does not include access to this trail. |
+
+### Permissions
+
+| Method and endpoint | Who may call it | Behavior |
+| --- | --- | --- |
+| `POST /api/documents/:id/permissions` | Document owner only | Grants or updates access for an existing account. Body: `{ "email": "person@example.com", "canRead": true, "canEdit": false }`. Edit also implies read. |
+| `DELETE /api/documents/:id/permissions/:userId` | Document owner only | Revokes that account's grant. The next document request rechecks the database grant. |
+
+### Administrator
+
+| Method and endpoint | Who may call it | Behavior |
+| --- | --- | --- |
+| `GET /api/admin/overview` | Administrator only | Counts users, documents, grants, failed events, and returns recent activity. |
+| `GET /api/admin/audit?q=&action=&success=` | Administrator only | Searches the global audit ledger (up to 400 events). |
+| `GET /api/admin/audit/verify` | Administrator only | Recomputes the SHA-256 chain and reports integrity. |
+| `GET /api/admin/users` | Administrator only | Lists account metadata and document counts. |
+
+Requests that fail authentication or authorization return `401` or `403` and are audited where the route can identify the attempted action. A missing document returns `404`.
 
 ## Tests
 
