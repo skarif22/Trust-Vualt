@@ -190,8 +190,9 @@ The first `prev_hash` is 64 zero hex characters.
 ## Docs
 
 - [THREATS.md](./THREATS.md) — STRIDE model
-- [PROMPTS.md](./PROMPTS.md) — specification prompts
-- [DEMO.md](./DEMO.md) — video script
+- [PROMPTS.md](./PROMPTS.md) — dated prompt and review log
+- [PROJECT_WRITEUP.md](./PROJECT_WRITEUP.md) — permission model, design choices, AI use, and open work
+- [DEMO.md](./DEMO.md) — five-minute video script; recording status is stated in the file
 
 ## License
 
