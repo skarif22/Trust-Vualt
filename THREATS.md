@@ -79,3 +79,5 @@ This document is a working threat model for the shipped demo, not a certificatio
 3. Hash chaining with genesis `0{64}` and admin verification.
 4. Isolation tests in `tests/isolation.test.js`.
 5. Helmet, CORS, parameterized SQL, bcrypt, JWT, upload limits.
+6. Tests directly request an unshared document by ID and attempt deletion as a viewer, including for a document with an edit grant; they assert denial, audit records, and document retention. Revocation tests also retry both detail and download routes.
+
