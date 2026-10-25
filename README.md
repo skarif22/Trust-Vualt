@@ -172,7 +172,7 @@ Requests that fail authentication or authorization return `401` or `403` and are
 npm test
 ```
 
-`tests/isolation.test.js` proves list filtering, download denial, admin byte isolation, read vs edit, instant revoke, and owner-only grants.
+`tests/isolation.test.js` proves list filtering, direct detail-read and download denial, admin byte isolation, read vs edit, immediate revoke for detail and download routes, viewer delete denial (including an edit-granted file), and owner-only grants. Denied direct read/delete attempts are checked in the audit log, and delete tests verify the documents remain stored.
 
 `tests/audit-chain.test.js` proves genesis chaining, failed-login append, and tamper detection.
 
